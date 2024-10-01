@@ -12,3 +12,41 @@ nav {
    justify-content: space-around;
    align-items: center;
 }
+
+.countryDiv {
+   height: 100%;
+   width: auto;
+   display: flex;
+   flex-direction: column;
+   justify-content: center;
+   align-items: center;
+}
+
+.countryDiv:hover {
+   background-color: cadetblue;
+}
+
+.dropdownDiv {
+   display: none;
+   position: absolute;
+   min-width: 160px;
+   margin-top: 15px;
+}
+
+.dropdownDiv span {
+   display: block;
+   padding: 12px 16px 12px 0;
+}
+
+.dropdownDiv span:hover {
+   background-color: palegreen;
+}
+
+.countryDiv:hover .dropdownDiv {
+   display: block;
+   background-color: lightgreen;
+}
+
+#visited:hover {
+   background-color: cadetblue;
+}
