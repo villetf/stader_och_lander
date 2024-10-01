@@ -51,10 +51,15 @@ function createNavButton(countries, cities) {
          dropdownDiv.appendChild(citySpan);
 
          citySpan.onclick = () => {
+            document.getElementById('cityContent').style.display = 'flex';
+            document.getElementById('visitedContent').style.display = 'none';
             generateCityInfo(citySpan.cityId, countries, cities);
          };
       }
    }
+   visited.onclick = () => {
+      generateVisitedPage(cities);
+   };
 }
 
 
@@ -100,3 +105,36 @@ function setToLocalStorage(cityId) {
    currentStorage.push(cityId);
    localStorage.setItem('citiesVisited', JSON.stringify(currentStorage));
 }
+
+// Funktion för att generera sida med besökta städer
+function generateVisitedPage(cities) {
+   if (document.getElementById('visitedContent')) {
+      document.getElementById('visitedContent').remove();
+   }
+   const visitedContent = document.createElement('main');
+   visitedContent.id = 'visitedContent';
+   document.querySelector('body').appendChild(visitedContent);
+
+   document.getElementById('cityContent').style.display = 'none';
+   const visitedTitle = document.createElement('h1');
+   visitedContent.appendChild(visitedTitle);
+   if (localStorage.getItem('citiesVisited') == '[]') {
+      visitedTitle.innerText = 'Du har inte besökt några städer.';
+      return;
+   }
+   visitedTitle.innerText = 'Du har besökt följande städer:';
+
+   const visitedList = document.createElement('ul');
+   visitedContent.appendChild(visitedList);
+
+   const visitedCities = JSON.parse(localStorage.getItem('citiesVisited'));
+
+   for (const city in visitedCities) {
+      const cityName = cities.filter((i) => {
+         return i.id == visitedCities[city];
+      })[0];
+      const cityLi = document.createElement('li');
+      cityLi.innerText = cityName.stadname;
+      visitedList.appendChild(cityLi);
+   }
+};
