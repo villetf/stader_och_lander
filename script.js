@@ -17,15 +17,13 @@ Promise.all([
 });
 
 function createNavButton(countries, cities) {
-   console.log('countries,', countries);
-   console.log('cities', cities);
-
    for (const country in countries) {
       const currentCountry = countries[country];
 
       const countryButton = document.createElement('span');
       countryButton.innerText = currentCountry.countryname;
       countryButton.classList.add('countryButton');
+
       const countryDiv = document.createElement('div');
       countryDiv.classList.add('countryDiv');
       countryDiv.appendChild(countryButton);
@@ -43,7 +41,32 @@ function createNavButton(countries, cities) {
 
          const citySpan = document.createElement('span');
          citySpan.innerText = currentCity.stadname;
+         citySpan.cityId = currentCity.id;
          dropdownDiv.appendChild(citySpan);
+
+         citySpan.onclick = () => {
+            generateCityInfo(citySpan.cityId, countries, cities);
+         };
       }
    }
+}
+
+
+function generateCityInfo(cityId, countries, cities) {
+   const cityName = document.getElementById('cityName');
+   const cityInfo = document.getElementById('cityInfo');
+
+   const currentCityInfo = cities.filter((i) => {
+      return i.id == cityId;
+   })[0];
+
+   const currentCountry = countries.filter((i) => {
+      return i.id == currentCityInfo.countryid;
+   })[0];
+
+   console.log(currentCountry);
+
+   console.log(currentCityInfo);
+   cityName.innerText = currentCityInfo.stadname;
+   cityInfo.innerText = `${currentCityInfo.stadname} är en stad som ligger i ${currentCountry.countryname} och har ${currentCityInfo.population} invånare.`;
 }

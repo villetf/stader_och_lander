@@ -23,7 +23,7 @@ nav {
 }
 
 .countryDiv:hover {
-   background-color: cadetblue;
+   background-color: green;
 }
 
 .dropdownDiv {
@@ -48,5 +48,28 @@ nav {
 }
 
 #visited:hover {
-   background-color: cadetblue;
+   background-color: green;
+}
+
+html, body {
+   width: 100%;
+   height: 100%;
+}
+
+#cityContent {
+   display: flex;
+   flex-direction: column;
+   height: 90%;
+   width: 100%;
+   justify-content: center;
+   align-items: center;
+}
+
+#cityName {
+   margin-bottom: 50px;
+   font-size: 50px;
+}
+
+#cityInfo {
+   font-size: 25px;
 }
