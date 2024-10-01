@@ -52,7 +52,9 @@ function createNavButton(countries, cities) {
 
          citySpan.onclick = () => {
             document.getElementById('cityContent').style.display = 'flex';
-            document.getElementById('visitedContent').style.display = 'none';
+            if (document.getElementById('visitedContent')) {
+               document.getElementById('visitedContent').style.display = 'none';
+            }
             generateCityInfo(citySpan.cityId, countries, cities);
          };
       }
@@ -137,4 +139,12 @@ function generateVisitedPage(cities) {
       cityLi.innerText = cityName.stadname;
       visitedList.appendChild(cityLi);
    }
+
+   const clearButton = document.createElement('button');
+   clearButton.innerText = 'Rensa reshistorik';
+   visitedContent.appendChild(clearButton);
+   clearButton.onclick = () => {
+      localStorage.setItem('citiesVisited', JSON.stringify([]));
+      generateVisitedPage(cities);
+   };
 };
