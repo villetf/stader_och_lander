@@ -1,6 +1,11 @@
 const nav = document.querySelector('nav');
 const visited = document.getElementById('visited');
 
+if (!localStorage.getItem('citiesVisited')) {
+   localStorage.setItem('citiesVisited', JSON.stringify([]));
+}
+
+// Hämtar json-data från filer
 Promise.all([
    fetch('json/land.json')
       .then((res) => {
@@ -16,6 +21,7 @@ Promise.all([
    createNavButton(countries, cities);
 });
 
+// Funktion för att skapa övre meny med rätt länder och städer
 function createNavButton(countries, cities) {
    for (const country in countries) {
       const currentCountry = countries[country];
@@ -52,7 +58,9 @@ function createNavButton(countries, cities) {
 }
 
 
+// Funktion för att fylla sidan med data om rätt stad
 function generateCityInfo(cityId, countries, cities) {
+   const cityContent = document.getElementById('cityContent');
    const cityName = document.getElementById('cityName');
    const cityInfo = document.getElementById('cityInfo');
 
@@ -64,9 +72,31 @@ function generateCityInfo(cityId, countries, cities) {
       return i.id == currentCityInfo.countryid;
    })[0];
 
-   console.log(currentCountry);
-
-   console.log(currentCityInfo);
    cityName.innerText = currentCityInfo.stadname;
    cityInfo.innerText = `${currentCityInfo.stadname} är en stad som ligger i ${currentCountry.countryname} och har ${currentCityInfo.population} invånare.`;
+
+   if (document.getElementById('visitedButton')) {
+      document.getElementById('visitedButton').remove();
+   }
+   const visitedButton = document.createElement('button');
+   visitedButton.id = 'visitedButton';
+   visitedButton.innerText = 'Markera som besökt';
+   cityContent.appendChild(visitedButton);
+
+   if (JSON.parse(localStorage.getItem('citiesVisited').includes(cityId))) {
+      visitedButton.innerText = `Du har besökt ${currentCityInfo.stadname}!`;
+   } else {
+      visitedButton.onclick = () => {
+         setToLocalStorage(cityId);
+         visitedButton.innerText = `Du har besökt ${currentCityInfo.stadname}!`;
+         visitedButton.onclick = '';
+      };
+   }
+}
+
+// Funktion för att skriva till localStorage
+function setToLocalStorage(cityId) {
+   const currentStorage = JSON.parse(localStorage.getItem('citiesVisited'));
+   currentStorage.push(cityId);
+   localStorage.setItem('citiesVisited', JSON.stringify(currentStorage));
 }
