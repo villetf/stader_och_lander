@@ -74,7 +74,7 @@ html, body {
    font-size: 25px;
 }
 
-#visitedButton {
+button {
    margin-top: 200px;
    width: 200px;
    height: 100px;
