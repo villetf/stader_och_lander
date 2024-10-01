@@ -73,3 +73,10 @@ html, body {
 #cityInfo {
    font-size: 25px;
 }
+
+#visitedButton {
+   margin-top: 200px;
+   width: 200px;
+   height: 100px;
+   font-size: 20px;
+}
