@@ -70,7 +70,7 @@ html, body {
    font-size: 50px;
 }
 
-#cityInfo {
+#cityInfo, #peopleMet {
    font-size: 25px;
 }
 
@@ -84,4 +84,8 @@ button {
 li {
    font-size: 25px;
    margin-top: 10px;
+}
+
+ul {
+   margin-bottom: 100px;
 }
