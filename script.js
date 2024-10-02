@@ -80,7 +80,7 @@ function generateCityInfo(cityId, countries, cities) {
    })[0];
 
    cityName.innerText = currentCityInfo.stadname;
-   cityInfo.innerText = `${currentCityInfo.stadname} är en stad som ligger i ${currentCountry.countryname} och har ${currentCityInfo.population} invånare.`;
+   cityInfo.innerText = `${currentCityInfo.stadname} är en stad som ligger i ${currentCountry.countryname} och har ${currentCityInfo.population.toLocaleString('sv-SE')} invånare.`;
 
    if (document.getElementById('visitedButton')) {
       document.getElementById('visitedButton').remove();
@@ -130,6 +130,7 @@ function generateVisitedPage(cities) {
    visitedContent.appendChild(visitedList);
 
    const visitedCities = JSON.parse(localStorage.getItem('citiesVisited'));
+   let inhabitants = 0;
 
    for (const city in visitedCities) {
       const cityName = cities.filter((i) => {
@@ -138,7 +139,13 @@ function generateVisitedPage(cities) {
       const cityLi = document.createElement('li');
       cityLi.innerText = cityName.stadname;
       visitedList.appendChild(cityLi);
+      inhabitants += cityName.population;
    }
+
+   const peopleMet = document.createElement('p');
+   peopleMet.id = 'peopleMet';
+   peopleMet.innerText = `På dina resor kan du ha träffat ${inhabitants.toLocaleString('sv-SE')} personer.`;
+   visitedContent.appendChild(peopleMet);
 
    const clearButton = document.createElement('button');
    clearButton.innerText = 'Rensa reshistorik';
