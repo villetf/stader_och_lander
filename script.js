@@ -39,6 +39,10 @@ function createNavButton(countries, cities) {
       dropdownDiv.classList.add('dropdownDiv');
       countryButton.appendChild(dropdownDiv);
 
+      countryDiv.onclick = () => {
+         dropdownDiv.classList.toggle('dropdownVisible');
+      };
+
       for (const city in cities) {
          const currentCity = cities[city];
          if (currentCity.countryid != currentCountry.id) {
@@ -63,6 +67,7 @@ function createNavButton(countries, cities) {
       generateVisitedPage(cities);
    };
 }
+
 
 
 // Funktion för att fylla sidan med data om rätt stad
