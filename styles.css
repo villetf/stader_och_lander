@@ -31,6 +31,11 @@ nav {
    position: absolute;
    min-width: 160px;
    margin-top: 15px;
+   background-color: lightgreen;
+}
+
+.dropdownVisible {
+   display: block;
 }
 
 .dropdownDiv span {
@@ -42,10 +47,10 @@ nav {
    background-color: palegreen;
 }
 
-.countryDiv:hover .dropdownDiv {
+/* .countryDiv:hover .dropdownDiv {
    display: block;
    background-color: lightgreen;
-}
+} */
 
 #visited:hover {
    background-color: green;
