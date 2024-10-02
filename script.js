@@ -1,6 +1,3 @@
-const nav = document.querySelector('nav');
-const visited = document.getElementById('visited');
-
 if (!localStorage.getItem('citiesVisited')) {
    localStorage.setItem('citiesVisited', JSON.stringify([]));
 }
@@ -26,18 +23,10 @@ function createNavButton(countries, cities) {
    for (const country in countries) {
       const currentCountry = countries[country];
 
-      const countryButton = document.createElement('span');
-      countryButton.innerText = currentCountry.countryname;
-      countryButton.classList.add('countryButton');
-
-      const countryDiv = document.createElement('div');
-      countryDiv.classList.add('countryDiv');
-      countryDiv.appendChild(countryButton);
-      nav.insertBefore(countryDiv, visited);
-
-      const dropdownDiv = document.createElement('div');
-      dropdownDiv.classList.add('dropdownDiv');
-      countryButton.appendChild(dropdownDiv);
+      const countryDiv = createNewElement('div', null, 'countryDiv', 'countryDiv', null);
+      const countryButton = createNewElement('span', currentCountry.countryname, 'countryButton', 'countryButton', countryDiv);
+      document.querySelector('nav').insertBefore(countryDiv, document.getElementById('visited'));
+      const dropdownDiv = createNewElement('div', null, 'dropdownDiv', 'dropdownDiv', countryButton);
 
       countryDiv.onclick = () => {
          dropdownDiv.classList.toggle('dropdownVisible');
@@ -49,17 +38,14 @@ function createNavButton(countries, cities) {
             continue;
          }
 
-         const citySpan = document.createElement('span');
-         citySpan.innerText = currentCity.stadname;
-         citySpan.cityId = currentCity.id;
-         dropdownDiv.appendChild(citySpan);
+         const citySpan = createNewElement('span', currentCity.stadname, null, null, dropdownDiv);
 
          citySpan.onclick = () => {
             document.getElementById('cityContent').style.display = 'flex';
             if (document.getElementById('visitedContent')) {
                document.getElementById('visitedContent').style.display = 'none';
             }
-            generateCityInfo(citySpan.cityId, countries, cities);
+            generateCityInfo(currentCity, currentCountry);
          };
       }
    }
@@ -71,18 +57,10 @@ function createNavButton(countries, cities) {
 
 
 // Funktion för att fylla sidan med data om rätt stad
-function generateCityInfo(cityId, countries, cities) {
+function generateCityInfo(currentCityInfo, currentCountry) {
    const cityContent = document.getElementById('cityContent');
    const cityName = document.getElementById('cityName');
    const cityInfo = document.getElementById('cityInfo');
-
-   const currentCityInfo = cities.filter((i) => {
-      return i.id == cityId;
-   })[0];
-
-   const currentCountry = countries.filter((i) => {
-      return i.id == currentCityInfo.countryid;
-   })[0];
 
    cityName.innerText = currentCityInfo.stadname;
    cityInfo.innerText = `${currentCityInfo.stadname} är en stad som ligger i ${currentCountry.countryname} och har ${currentCityInfo.population.toLocaleString('sv-SE')} invånare.`;
@@ -90,16 +68,14 @@ function generateCityInfo(cityId, countries, cities) {
    if (document.getElementById('visitedButton')) {
       document.getElementById('visitedButton').remove();
    }
-   const visitedButton = document.createElement('button');
-   visitedButton.id = 'visitedButton';
-   visitedButton.innerText = 'Markera som besökt';
-   cityContent.appendChild(visitedButton);
 
-   if (JSON.parse(localStorage.getItem('citiesVisited').includes(cityId))) {
+   const visitedButton = createNewElement('button', 'Markera som besökt', 'visitedButton', null, cityContent);
+
+   if (JSON.parse(localStorage.getItem('citiesVisited')).includes(currentCityInfo.id)) {
       visitedButton.innerText = `Du har besökt ${currentCityInfo.stadname}!`;
    } else {
       visitedButton.onclick = () => {
-         setToLocalStorage(cityId);
+         setToLocalStorage(currentCityInfo.id);
          visitedButton.innerText = `Du har besökt ${currentCityInfo.stadname}!`;
          visitedButton.onclick = '';
       };
@@ -118,21 +94,19 @@ function generateVisitedPage(cities) {
    if (document.getElementById('visitedContent')) {
       document.getElementById('visitedContent').remove();
    }
-   const visitedContent = document.createElement('main');
-   visitedContent.id = 'visitedContent';
-   document.querySelector('body').appendChild(visitedContent);
+
+   const visitedContent = createNewElement('main', null, 'visitedContent', null, document.querySelector('body'));
 
    document.getElementById('cityContent').style.display = 'none';
-   const visitedTitle = document.createElement('h1');
-   visitedContent.appendChild(visitedTitle);
+
+   const visitedTitle = createNewElement('h1', null, null, null, visitedContent);
    if (localStorage.getItem('citiesVisited') == '[]') {
       visitedTitle.innerText = 'Du har inte besökt några städer.';
       return;
    }
    visitedTitle.innerText = 'Du har besökt följande städer:';
 
-   const visitedList = document.createElement('ul');
-   visitedContent.appendChild(visitedList);
+   const visitedList = createNewElement('ul', null, null, null, visitedContent);
 
    const visitedCities = JSON.parse(localStorage.getItem('citiesVisited'));
    let inhabitants = 0;
@@ -141,22 +115,34 @@ function generateVisitedPage(cities) {
       const cityName = cities.filter((i) => {
          return i.id == visitedCities[city];
       })[0];
-      const cityLi = document.createElement('li');
-      cityLi.innerText = cityName.stadname;
-      visitedList.appendChild(cityLi);
+      createNewElement('li', cityName.stadname, null, null, visitedList);
       inhabitants += cityName.population;
    }
 
-   const peopleMet = document.createElement('p');
-   peopleMet.id = 'peopleMet';
-   peopleMet.innerText = `På dina resor kan du ha träffat ${inhabitants.toLocaleString('sv-SE')} personer.`;
-   visitedContent.appendChild(peopleMet);
+   createNewElement('p', `På dina resor kan du ha träffat ${inhabitants.toLocaleString('sv-SE')} personer.`, 'peopleMet', null, visitedContent);
 
-   const clearButton = document.createElement('button');
-   clearButton.innerText = 'Rensa reshistorik';
-   visitedContent.appendChild(clearButton);
+   const clearButton = createNewElement('button', 'Rensa reshistorik', null, null, visitedContent);
    clearButton.onclick = () => {
       localStorage.setItem('citiesVisited', JSON.stringify([]));
       generateVisitedPage(cities);
    };
 };
+
+
+function createNewElement(elementType, text, id, classes, parent) {
+   const element = document.createElement(elementType);
+   element.innerText = text;
+
+   if (id) {
+      element.id = id;
+   }
+
+   if (classes) {
+      element.classList = classes;
+   }
+
+   if (parent) {
+      parent.appendChild(element);
+   }
+   return element;
+}
