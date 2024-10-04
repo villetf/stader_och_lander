@@ -128,7 +128,7 @@ function generateVisitedPage(cities) {
    };
 };
 
-
+// Funktion för att skapa nytt element
 function createNewElement(elementType, text, id, classes, parent) {
    const element = document.createElement(elementType);
    element.innerText = text;
